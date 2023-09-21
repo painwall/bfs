@@ -32,3 +32,45 @@ graph = {
 # Начинаем обход с вершины 'A'
 print("Результат обхода в ширину:")
 bfs(graph, 'A')
+
+
+from collections import deque
+
+def bfs_shortest_path(graph, start, end):
+    if start == end:
+        return [start]
+
+    visited = set()
+    queue = deque([(start, [start])])
+
+    while queue:
+        vertex, path = queue.popleft()
+        for neighbor in graph[vertex] - set(path):
+            if neighbor == end:
+                return path + [neighbor]
+            else:
+                queue.append((neighbor, path + [neighbor]))
+                visited.add(neighbor)
+
+    return None
+
+# Пример графа в виде словаря
+graph = {
+    'A': {'B', 'C'},
+    'B': {'A', 'D', 'E'},
+    'C': {'A', 'F'},
+    'D': {'B'},
+    'E': {'B', 'F'},
+    'F': {'C', 'E'}
+}
+
+# Начальная и конечная вершины для поиска кратчайшего пути
+start_vertex = 'A'
+end_vertex = 'F'
+
+shortest_path = bfs_shortest_path(graph, start_vertex, end_vertex)
+
+if shortest_path:
+    print(f"Кратчайший путь от {start_vertex} до {end_vertex}: {shortest_path}")
+else:
+    print(f"Пути от {start_vertex} до {end_vertex} не существует.")
